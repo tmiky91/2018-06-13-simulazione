@@ -3,9 +3,11 @@ package it.polito.tdp.flightdelays;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.flightdelays.model.Airline;
 import it.polito.tdp.flightdelays.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -23,7 +25,7 @@ public class FlightDelaysController {
     private TextArea txtResult;
 
     @FXML
-    private ComboBox<?> cmbBoxLineaAerea;
+    private ComboBox<Airline> cmbBoxLineaAerea;
 
     @FXML
     private Button caricaVoliBtn;
@@ -34,9 +36,16 @@ public class FlightDelaysController {
     @FXML
     private TextField numeroVoliTxtInput;
 
+	private Model model;
+
     @FXML
     void doCaricaVoli(ActionEvent event) {
-    		System.out.println("Carica voli!");
+    	Airline a = cmbBoxLineaAerea.getValue();
+    	if(a!=null) {
+    		txtResult.setText(model.caricaVoli(a));
+    	}else {
+    		showMessage("Errore: Seleziona una compagnia aerea dal menù a tendina");
+    	}
     }
 
     @FXML
@@ -55,6 +64,13 @@ public class FlightDelaysController {
     }
     
 	public void setModel(Model model) {
-		// TODO Auto-generated method stub
+		this.model = model;
+		cmbBoxLineaAerea.getItems().addAll(model.getAllAirlines());
+	}
+	
+	private void showMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setContentText(message);
+		alert.show();
 	}
 }
